@@ -1,0 +1,13 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "vm1" do |vm1|
+    vm1.vm.box = "centos/7"
+    config.vm.provision "shell", inline: <<-SHELL
+      sudo useradd adminuser
+      usermod -aG sudo adminuser
+      sudo useradd poweruser
+      sudo bash -c 'echo "poweruser     ALL=(ALL:ALL) /sbin/iptables" >> /etc/sudoers'
+      usermod -aG adminuser poweruser
+      sudo find /home/ -perm /640
+    SHELL
+  end
+end
